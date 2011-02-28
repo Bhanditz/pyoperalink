@@ -47,6 +47,17 @@ class LinkEntry(object):
                         for key, val in vars(self).iteritems()
                             if key in self.fields and val is not None)
 
+    def __getstate__(self):
+        """
+            Returns a dict with the object fields, 'id' attribute and
+            'item_type' if present.
+
+            With this property LinkEntry can be 'pickable'.
+        """
+        params = self._to_python()
+        params['item_type'] = getattr(self, 'item_type', None)
+        params['id'] = self.id
+        return params
 
     def _set_fields(self, params):
         """
